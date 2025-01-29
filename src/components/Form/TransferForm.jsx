@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import { useTransactions } from '../../components/TransactionContext';
 
 const TransferForm = ({ onClose }) => {
+  const { fetchTransactions } = useTransactions();
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state for the submit button
   const [transferData, setTransferData] = useState({
     username: '',
     amount: '',
@@ -30,6 +33,7 @@ const TransferForm = ({ onClose }) => {
     }
 
     if (token) {
+      setLoading(true); // Start loading state
       const headers = {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -47,9 +51,12 @@ const TransferForm = ({ onClose }) => {
 
         alert(response.data.message);
         setTransferData({ username: '', amount: '' });
+        fetchTransactions(); // Update the transactions
         onClose(); // Close modal on success
       } catch (error) {
         setError(error.response?.data?.message || 'Transfer failed');
+      } finally {
+        setLoading(false); // End loading state
       }
     }
   };
@@ -98,9 +105,10 @@ const TransferForm = ({ onClose }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className={`px-4 py-2 ${loading ? 'bg-gray-400' : 'bg-blue-600'} text-white rounded-lg hover:${loading ? '' : 'bg-blue-700'} transition`}
+              disabled={loading} // Disable the button while loading
             >
-              Send Money
+              {loading ? 'Processing...' : 'Send Money'}
             </button>
           </div>
         </form>

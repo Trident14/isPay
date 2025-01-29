@@ -28,7 +28,7 @@ const GoalForm = () => {
       };
       axios
         .post(
-          'https://ispay.onrender.com/api/dashboard/new-saving-goal',
+          'http://localhost:3080/api/dashboard/new-saving-goal',
           { ...goalData },
           { headers: headers },
         )
