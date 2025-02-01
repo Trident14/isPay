@@ -3,11 +3,16 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TransactionPage from './TransactionPage';
+import SavingsGoals from '../DashboardComponents/SavingsGoals';
+import TransferForm from '../Form/TransferForm';
+import FAQ from '../Faq';
+import Support from '../Support';
 
 const Header = () => {
   const queryClient = useQueryClient();
   const [username, setUsername] = useState(null);
   const [cookies] = useCookies(['access_token']);
+  const [showTransferForm, setTransferForm] = useState(false);
   const [popupStates, setPopupStates] = useState({
     createGoal: false,
     viewAllGoals: false,
@@ -100,7 +105,6 @@ const Header = () => {
       }
     }
   };
-  
 
   const warningFunc = (goalname) => {
     const shouldProceed = window.confirm(`Are you sure you want to withdraw? This will delete the goal ${goalname}.`);
@@ -125,42 +129,44 @@ const Header = () => {
     return <div>Error: {goal_Error?.message || transaction_Error?.data?.message || balance_error?.message}</div>;
   }
 
-    const sortedTransactions = transaction_Data?.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    const latestTransactions = sortedTransactions?.slice(0, 3);
-
-
   return (
-    <div id="dashboard" className="p-6 bg-[#E5E7EB]">
-      <header className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+    
+    <div id="dashboard" className="container mx-auto px-4 p-4 sm:p-6 bg-[#E5E7EB] mt-16 lg:mt-0 overflow-x-auto">
+      {/* Header */}
+      {showTransferForm && (
+        <div className="mt-4 p-4 bg-gray-100 rounded">
+          <TransferForm onClose={() => setTransferForm(false)} />
+        </div>
+      )}
+      <header className="flex flex-col sm:flex-row justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Dashboard</h1>
         <div className="flex items-center space-x-4">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            Add Money
-          </button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          <button
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={() => setTransferForm(!showTransferForm)}
+          >
             Send Money
           </button>
         </div>
       </header>
 
-      {/* {dashboard main} */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg border border-neutral-200/20">
+      {/* Dashboard main content */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-lg transition-all duration-300">
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-600">Total Balance</span>
             <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" strokelinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <path stroke-linecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
             </svg>
           </div>
           <h2 className="text-3xl font-bold text-gray-800 mb-2">${balance_response?.balance}</h2>
-          {/* <p className="text-green-600 text-sm">+3.5% from last month</p> */}
         </div>
 
-        <div className="bg-white p-6 rounded-lg border border-neutral-200/20">
+        <div className="bg-white p-6 rounded-lg shadow-lg transition-all duration-300">
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-600">Savings Goals</span>
             <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" strokelinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              <path stroke-linecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
             </svg>
           </div>
           <h2 className="text-3xl font-bold text-gray-800 mb-2">${goal_Data?.reduce((acc, goal) => acc + goal.goal_amount, 0)}</h2>
@@ -168,92 +174,70 @@ const Header = () => {
         </div>
       </div>
 
-    {/* Recent Transactions */}
-      <div className="bg-white rounded-lg border border-neutral-200/20 mb-8">
+      {/* Recent Transactions */}
+      <div className="bg-white rounded-lg shadow-lg transition-all duration-300 mb-8">
         <div className="p-6 border-b border-neutral-200/20">
           <h3 className="text-lg font-semibold text-gray-800">Recent Transactions</h3>
         </div>
         <div className="p-6">
           <div className="space-y-4">
-            {latestTransactions?.map((transaction, index) => (
-              <div className="flex items-center justify-between" key={index}>
-                <div className="flex items-center space-x-4">
-                  <div className={`w-10 h-10 ${transaction.transaction_type === 'credit' ? 'bg-green-100' : 'bg-blue-100'} rounded-full flex items-center justify-center`}>
-                    <svg
-                      className={`w-5 h-5 ${transaction.transaction_type === 'credit' ? 'text-green-600' : 'text-blue-600'}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+            {Array.isArray(transaction_Data?.transactions) && transaction_Data.transactions.length > 0 ? (
+              transaction_Data.transactions.slice(0, 4).map((transaction, index) => (
+                <div className="flex items-center justify-between" key={index}>
+                  <div className="flex items-center space-x-4">
+                    <div
+                      className={`w-10 h-10 ${
+                        transaction.transaction_type === 'credit' ? 'bg-green-100' : 'bg-blue-100'
+                      } rounded-full flex items-center justify-center`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d={transaction.transaction_type === 'credit' ? "M12 4v16m8-8H4" : "M5 13l4 4L19 7"}
-                      ></path>
-                    </svg>
+                      <svg
+                        className={`w-5 h-5 ${
+                          transaction.transaction_type === 'credit' ? 'text-green-600' : 'text-blue-600'
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d={
+                            transaction.transaction_type === 'credit'
+                              ? 'M12 4v16m8-8H4'
+                              : 'M5 13l4 4L19 7'
+                          }
+                        ></path>
+                      </svg>
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-semibold text-gray-800">{transaction.sendTo}</h4>
+                      <p className="text-sm text-gray-600">{transaction.transaction_type === 'credit' ? 'Received' : 'Sent'}</p>
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <h4 className="font-semibold text-gray-800">{transaction.sendTo}</h4>
-                    <p className="text-sm text-gray-600">{new Date(transaction.created_at).toLocaleString()}</p>
-                  </div>
+                  <span className={`font-medium ${transaction.transaction_type === 'credit' ? 'text-green-600' : 'text-red-600'}`}>
+                    {transaction.transaction_type === 'credit' ? `+${transaction.amount}` : `-${transaction.amount}`}
+                  </span>
                 </div>
-                <span
-                  className={`text-sm font-semibold ${
-                    transaction.transaction_type === 'credit' ? 'text-green-600' : 'text-red-600'
-                  }`}
-                >
-                  {transaction.transaction_type === 'credit' ? `+$${transaction.amount.toFixed(2)}` : `-$${transaction.amount.toFixed(2)}`}
-                </span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No transactions available</p>
+            )}
           </div>
-          <a href="#all-transactions">
+          <a href="#transactions-section">
             <button className="mt-6 w-full py-3 text-blue-600 font-medium hover:text-blue-700 transition-colors">
               View All Transactions
             </button>
           </a>
         </div>
       </div>
-      {/* {All Transaction} */}
-      {/* <div id="all-transactions" className="p-6 mt-8">
-          <h3 className="text-lg font-semibold text-gray-800">All Transactions</h3>
-          <div className="space-y-4">
-            {transaction_Data?.map((transaction, index) => (
-              <div className="flex items-center justify-between" key={index}>
-                <div className="flex items-center space-x-4">
-                  <div className={`w-10 h-10 ${transaction.transaction_type === 'credit' ? 'bg-green-100' : 'bg-blue-100'} rounded-full flex items-center justify-center`}>
-                    <svg
-                      className={`w-5 h-5 ${transaction.transaction_type === 'credit' ? 'text-green-600' : 'text-blue-600'}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d={transaction.transaction_type === 'credit' ? "M12 4v16m8-8H4" : "M5 13l4 4L19 7"}
-                      ></path>
-                    </svg>
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="font-semibold text-gray-800">{transaction.sendTo}</h4>
-                    <p className="text-sm text-gray-600">{new Date(transaction.created_at).toLocaleString()}</p>
-                  </div>
-                </div>
-                <span
-                  className={`text-sm font-semibold ${
-                    transaction.transaction_type === 'credit' ? 'text-green-600' : 'text-red-600'
-                  }`}
-                >
-                  {transaction.transaction_type === 'credit' ? `+$${transaction.amount.toFixed(2)}` : `-$${transaction.amount.toFixed(2)}`}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div> */}
-        <TransactionPage transaction_Data={transaction_Data} />
+
+      {/* Render Other Sections */}
+      <div id='transactions-section'><TransactionPage transaction_Data={transaction_Data || { transactions: [] }} /></div>
+<div><SavingsGoals goals={goal_Data} warningFunc={warningFunc} /></div>
+<div className="mb-6"><FAQ /></div>  {/* Add bottom margin to FAQ */}
+<div><Support /></div>
+
     </div>
   );
 };

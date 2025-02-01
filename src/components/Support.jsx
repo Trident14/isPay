@@ -36,7 +36,7 @@ const Support = () => {
             <h2 className="text-lg font-semibold text-gray-800">Phone Support</h2>
           </div>
           <p className="text-gray-600 mb-4">Call us at 1-800-isPay-HELP</p>
-          <button className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+          <button className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" style={{marginTop:"1.5rem"}}>
             Call Now
           </button>
         </div>
@@ -51,56 +51,13 @@ const Support = () => {
             <h2 className="text-lg font-semibold text-gray-800">Email Support</h2>
           </div>
           <p className="text-gray-600 mb-4">Get help via email within 24 hours</p>
-           <a href="mailto:isPay-support@example.com">
-            <button className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-        
-                Send Email
+          <a href="mailto:isPay-support@example.com">
+            <button className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" style={{marginTop:"1.5rem"}}>
+              Send Email
             </button>
-          </a> 
+          </a>
         </div>
       </div>
-
-
-
-      {/* Support Ticket Section */}
-      {/* <div className="bg-white rounded-lg border border-neutral-200/20 p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">Submit a Support Ticket</h2>
-        <form className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-            <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="What do you need help with?" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-            <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-              <option>Account Issues</option>
-              <option>Transaction Problems</option>
-              <option>Savings Goals</option>
-              <option>Technical Support</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-            <textarea rows="4" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Please describe your issue in detail"></textarea>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Attachments (optional)</label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-              <div className="space-y-1 text-center">
-                <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                  <path d="M27 21c.56 0 1.08-.21 1.46-.59L39 12.41a2 2 0 000-2.83l-2.83-2.83a2 2 0 00-2.83 0l-8.53 8.53A4.962 4.962 0 0027 16c-2.76 0-5 2.24-5 5 0 2.75 2.24 5 5 5zm0-10c.36 0 .71.12 1 .31L33.29 18.29c-.62-.35-1.27-.59-1.97-.59-2.76 0-5 2.24-5 5 0 2.75 2.24 5 5 5 2.76 0 5-2.24 5-5 0-1.43-.62-2.7-1.59-3.59l4.93-4.93c.4-.4.58-.98.58-1.46s-.18-1.06-.58-1.46l-2.83-2.83a2 2 0 00-2.83 0l-4.93 4.93c-.41-.19-.85-.31-1.31-.31-2.76 0-5 2.24-5 5 0 2.75 2.24 5 5 5 2.76 0 5-2.24 5-5 0-.72-.28-1.38-.74-1.86L39 12.41a2 2 0 000-2.83l-2.83-2.83a2 2 0 00-2.83 0L27 16zm0 12c-2.76 0-5 2.24-5 5 0 2.75 2.24 5 5 5zm0-5c.56 0 1.08-.21 1.46-.59L39 12.41a2 2 0 000-2.83l-2.83-2.83a2 2 0 00-2.83 0L27 16z"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 text-right">
-            <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              Submit Ticket
-            </button>
-          </div>
-        </form>
-      </div> */}
     </div>
   );
 };

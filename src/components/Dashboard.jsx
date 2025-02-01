@@ -1,33 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar'; // Import Sidebar component
+import React from 'react';
+import Sidebar from './Sidebar';
 import Header from './DashboardComponents/Header';
-import { useCookies } from 'react-cookie';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 
-import { QueryClient, QueryClientProvider,useQueries } from '@tanstack/react-query';
 export const queryClient = new QueryClient();
 
 const Dashboard = () => {
-  const [transactions, setTransactions] = useState([]); // To store all transactions
-  const [filteredTransactions, setFilteredTransactions] = useState([]);
-  const [cookies] = useCookies(['access_token']);
-
   return (
-   
-    <div className="flex">
-      <QueryClientProvider client={queryClient}>
-        {/* Sidebar Component */}
-        <Sidebar />
-
-        {/* Main Content */}
-        <main className="flex-1 min-h-screen overflow-y-auto bg-[#E5E7EB] lg:ml-64">
-       
-          {/* Pass latestTransactions to Header */}
-          <Header  />
-
-
-        </main>
-      </QueryClientProvider>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="flex flex-col">
+        <div className="w-64 flex-none">
+          <Sidebar />
+        </div>
+        <div className="flex-1 "> 
+          <Header />
+        </div>
+      </div>
+    </QueryClientProvider>
   );
 };
 

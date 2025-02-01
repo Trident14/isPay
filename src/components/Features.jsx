@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const features = [
   {
@@ -20,26 +21,29 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="py-20 px-8 bg-white">
-      <h2 className="text-4xl font-bold text-center text-gray-900">Powerful Banking Features</h2>
-      <p className="text-gray-600 text-center mt-4 max-w-2xl mx-auto">
-        Experience next-generation banking with our innovative features designed for your financial success.
-      </p>
-      <div className="mt-12 grid md:grid-cols-3 gap-8 text-center">
+    <section id="features" className="py-20 px-8 bg-gray-50">
+      <div className="max-w-4xl mx-auto text-center">
+        <h2 className="text-4xl font-bold text-gray-900">Powerful Banking Features</h2>
+        <p className="text-gray-600 mt-4">
+          Experience next-generation banking with our innovative features designed for your financial success.
+        </p>
+      </div>
+
+      <div className="mt-12 max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-center">
         {features.map((feature, index) => (
-          <div
+          <motion.div
             key={index}
-            className="relative bg-gray-100 p-8 rounded-lg shadow-md transition-transform transform hover:-translate-y-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.2 }}
+            className="bg-white shadow-lg rounded-lg p-6"
           >
             <div className="text-5xl">{feature.icon}</div>
             <h3 className="text-2xl font-bold mt-4 text-gray-900">{feature.title}</h3>
             <p className="text-gray-600 mt-2">{feature.description}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
-
-      {/* Call to Action Buttons */}
-  
     </section>
   );
 };

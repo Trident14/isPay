@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
+import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useTransactions } from '../../components/TransactionContext';
 
-const TransferForm = ({ onClose }) => {
-  const { fetchTransactions } = useTransactions();
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // Loading state for the submit button
+const TransferForm = ({ onClose, fetchTransactions }) => {
+  const [loading, setLoading] = useState(false); 
+  const queryClient = useQueryClient();
   const [transferData, setTransferData] = useState({
     username: '',
     amount: '',
   });
 
   const [cookies] = useCookies(['access_token']);
+  const refetchBalance = () => {
+    queryClient.invalidateQueries(['balanceFetch']);
+    queryClient.invalidateQueries(['transactions']);
+    queryClient.invalidateQueries(['savingGoals']); 
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,21 +28,20 @@ const TransferForm = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     const token = cookies['access_token'];
-
+  
     if (!transferData.username || !transferData.amount) {
-      setError('Please fill in all fields.');
+      alert('Please fill in all fields.');
       return;
     }
-
+  
     if (token) {
-      setLoading(true); // Start loading state
+      setLoading(true);
       const headers = {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       };
-
+  
       try {
         const response = await axios.patch(
           `http://localhost:3080/api/dashboard/transfer`,
@@ -48,25 +51,29 @@ const TransferForm = ({ onClose }) => {
           },
           { headers: headers }
         );
-
-        alert(response.data.message);
-        setTransferData({ username: '', amount: '' });
-        fetchTransactions(); // Update the transactions
-        onClose(); // Close modal on success
+  
+        // ✅ If the request is successful, show success message
+        if (response.status === 200) {
+          alert(response.data.message);
+          onClose();
+          refetchBalance();
+        }
       } catch (error) {
-        setError(error.response?.data?.message || 'Transfer failed');
+        console.error(error);
+        // ✅ Show failure message only if an error occurs
+        alert(error.response?.data?.message || 'Transfer failed');
+        refetchBalance();
       } finally {
-        setLoading(false); // End loading state
+        setLoading(false);
       }
     }
   };
+  
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Send Money</h2>
-
-        {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

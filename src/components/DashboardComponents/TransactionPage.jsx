@@ -6,7 +6,7 @@ const TransactionPage = ({ transaction_Data }) => {
   const [transactionType, setTransactionType] = useState('All Transactions');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const transactionsPerPage = 10;
+  const transactionsPerPage = 5;
 
   // Function to get the start date based on the selected range
   const getDateRangeStart = (range) => {
@@ -18,21 +18,21 @@ const TransactionPage = ({ transaction_Data }) => {
         return new Date(today.setDate(today.getDate() - 30));
       case 'Last 3 months':
         return new Date(today.setMonth(today.getMonth() - 3));
-      case 'Custom range':
-        return new Date('2023-01-01'); // Replace with a custom range if needed
       default:
-        return new Date(0); // Return the beginning of time if no range is selected
+        return new Date(0); 
     }
   };
 
   // Filtered transaction data based on filters and search
-  const filteredTransactions = transaction_Data?.filter((transaction) => {
-    const isInDateRange = new Date(transaction.created_at) >= getDateRangeStart(dateRange);
-    const isOfType = transactionType === 'All Transactions' || transaction.transaction_type.toLowerCase() === transactionType.toLowerCase();
-    const matchesSearchQuery = searchQuery === '' || transaction.sendTo.toLowerCase().includes(searchQuery.toLowerCase()) || transaction.description?.toLowerCase().includes(searchQuery.toLowerCase());
+  // Ensure `transactions` is accessed correctly
+const filteredTransactions = transaction_Data?.transactions?.filter((transaction) => {
+  const isInDateRange = new Date(transaction.created_at) >= getDateRangeStart(dateRange);
+  const isOfType = transactionType === 'All Transactions' || transaction.transaction_type.toLowerCase() === transactionType.toLowerCase();
+  const matchesSearchQuery = searchQuery === '' || transaction.sendTo.toLowerCase().includes(searchQuery.toLowerCase()) || transaction.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return isInDateRange && isOfType && matchesSearchQuery;
-  });
+  return isInDateRange && isOfType && matchesSearchQuery;
+}) || [];
+
 
   // Get current transactions based on pagination
   const indexOfLastTransaction = currentPage * transactionsPerPage;
@@ -67,7 +67,7 @@ const TransactionPage = ({ transaction_Data }) => {
   };
 
   return (
-    <div id="transactions" className="p-6 bg-[#E5E7EB]">
+    <div id="transactions" className="p-6 bg-[#E5E7EB] bg-white rounded-lg border border-neutral-200/20 mb-8">
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold text-gray-800">Transactions</h1>
@@ -161,23 +161,16 @@ const TransactionPage = ({ transaction_Data }) => {
         </div>
 
         {/* Pagination */}
-        <div className="p-6 flex justify-between items-center">
-          <button
-            className="text-gray-600 hover:text-blue-600"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          <span className="text-gray-600">Page {currentPage} of {totalPages}</span>
-          <button
-            className="text-gray-600 hover:text-blue-600"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
+        <div className="p-6 border-t border-neutral-200/20 flex items-center justify-between">
+            <div className="text-gray-600">Page {currentPage} out of {totalPages} entries</div>
+            <div className="flex space-x-2">
+                <button className="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors" onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}>Previous</button>
+                <button className="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors" onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}>Next</button>
+            </div>
         </div>
+
       </div>
     </div>
   );
