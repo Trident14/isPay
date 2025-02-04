@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar"; // Import Sidebar
-import Hero from "./components/Hero";
+import Hero from "./components/hero";
 import Features from "./components/Features";
 import LoginRegister from "./components/LoginRegister";
 import Footer from "./components/Footer";
