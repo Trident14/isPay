@@ -35,7 +35,7 @@ const AppContent = () => {
                   </section>
 
                   {/* Features Section */}
-                  <section className="bg-gray-50 py-24 px-6 sm:px-12 lg:px-24">
+                  <section is="features" className="bg-gray-50 py-24 px-6 sm:px-12 lg:px-24">
                     <Features />
                   </section>
 

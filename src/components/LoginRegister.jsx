@@ -18,7 +18,7 @@ const LoginRegister = () => {
     setError(""); 
 
     try {
-      const response = await axios.post("http://localhost:3080/register", {
+      const response = await axios.post("https://ispay-server.onrender.com/register", {
         username,
         password,
       });
@@ -34,18 +34,18 @@ const LoginRegister = () => {
     setError(""); 
 
     try {
-      const response = await axios.post("http://localhost:3080/login", {
+      const response = await axios.post("https://ispay-server.onrender.com/login", {
         username,
         password,
       });
 
-      setCookies("access_token", response.data.token);
-      window.localStorage.setItem("username", response.data.username);
-
       if (response.data.isAdmin) {
         alert("Welcome Admin!");
         navigate("/");
+        
       } else {
+        setCookies("access_token", response.data.token);
+        window.localStorage.setItem("username", response.data.username);
         alert("Welcome User!");
         navigate("/dashboard");
       }

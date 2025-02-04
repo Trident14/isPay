@@ -36,7 +36,7 @@ const UpdateGoalForm = ({ current_goal_name, onClose }) => {
       };
       try {
         const response = await axios.patch(
-          'http://localhost:3080/api/dashboard/update-money-saving-goal',
+          'https://ispay-server.onrender.com/api/dashboard/update-money-saving-goal',
           requestBody,
           { headers: headers }
         );

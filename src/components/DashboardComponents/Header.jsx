@@ -37,7 +37,7 @@ const Header = () => {
     if (token) {
       const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
       axios
-        .get("http://localhost:3080/api/dashboard/check-saving-goals-enable", { headers })
+        .get("https://ispay-server.onrender.com/api/dashboard/check-saving-goals-enable", { headers })
         .then((response) => setActiveSaving(response.data))
         .catch((error) => alert(error.data));
     }
@@ -49,7 +49,7 @@ const Header = () => {
       const user = localStorage.getItem("username");
       const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
       axios
-        .post("http://localhost:3080/api/dashboard/enable-saving-goals", { username: user }, { headers })
+        .post("https://ispay-server.onrender.com/api/dashboard/enable-saving-goals", { username: user }, { headers })
         .then(() => {
           alert("Saving Feature Active");
           setActiveSaving(true);
@@ -67,7 +67,7 @@ const Header = () => {
 
   const { data: balance_response, error: balance_error, isLoading: balance_IsLoading } = useQuery({
     queryKey: ['balanceFetch'],
-    queryFn: () => fetchData('http://localhost:3080/api/dashboard/balance', cookies['access_token']),
+    queryFn: () => fetchData('https://ispay-server.onrender.com/api/dashboard/balance', cookies['access_token']),
     staleTime: 30000,
     cacheTime: 60000,
     enabled: true,
@@ -75,7 +75,7 @@ const Header = () => {
 
   const { data: goal_Data, error: goal_Error, isLoading: goal_IsLoading } = useQuery({
     queryKey: ['savingGoals'],
-    queryFn: () => fetchData('http://localhost:3080/api/dashboard/all-savings-goal', cookies['access_token']),
+    queryFn: () => fetchData('https://ispay-server.onrender.com/api/dashboard/all-savings-goal', cookies['access_token']),
     staleTime: 30000,
     cacheTime: 60000,
     enabled: true,
@@ -83,7 +83,7 @@ const Header = () => {
 
   const { data: transaction_Data, error: transaction_Error, isLoading: transaction_IsLoading } = useQuery({
     queryKey: ['transactions'],
-    queryFn: () => fetchData('http://localhost:3080/api/dashboard/all-transaction', cookies['access_token']),
+    queryFn: () => fetchData('https://ispay-server.onrender.com/api/dashboard/all-transaction', cookies['access_token']),
     staleTime: 30000,
     cacheTime: 60000,
     enabled: true,
@@ -95,7 +95,7 @@ const Header = () => {
       const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
       try {
         const response = await axios.patch(
-          "http://localhost:3080/api/dashboard/withdrwal-money-sg",
+          "https://ispay-server.onrender.com/api/dashboard/withdrwal-money-sg",
           { goal_name: goalname },
           { headers }
         );

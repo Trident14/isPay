@@ -44,7 +44,7 @@ const TransferForm = ({ onClose, fetchTransactions }) => {
   
       try {
         const response = await axios.patch(
-          `http://localhost:3080/api/dashboard/transfer`,
+          `https://ispay-server.onrender.com/api/dashboard/transfer`,
           {
             username: transferData.username,
             amount: Number(transferData.amount),
