@@ -126,7 +126,11 @@ const Header = () => {
   }
 
   if (goal_Error || transaction_Error || balance_error) {
-    return <div>Error: {goal_Error?.message || transaction_Error?.data?.message || balance_error?.message}</div>;
+    const balance = balance_response?.balance || 0; // Default to 0 if no balance data
+    const goalData = Array.isArray(goal_Data) ? goal_Data : []; // Default to empty array
+    const transactions = transaction_Data?.transactions ? transaction_Data.transactions : []; // Default to empty array
+    
+   // return <div>Error: {goal_Error?.message || transaction_Error?.data?.message || balance_error?.message}</div>;
   }
 
   return (
@@ -169,8 +173,19 @@ const Header = () => {
               <path stroke-linecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">${goal_Data?.reduce((acc, goal) => acc + goal.goal_amount, 0)}</h2>
-          <p className="text-blue-600 text-sm"> {goal_Data.length} active goals</p>
+          {!isactivateSavings ? (
+          <button
+            onClick={activateSavings}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Activate Savings
+            </button>
+          ) : (
+              <>
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">${goal_Data?.reduce((acc, goal) => acc + goal.Total_amount, 0)}</h2>
+              <p className="text-blue-600 text-sm"> {goal_Data.length} active goals</p>
+              </>
+          )}
         </div>
       </div>
 
